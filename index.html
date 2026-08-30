@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hamza Shop · PUBG</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0b0e14;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .shop-card {
+            max-width: 540px;
+            width: 100%;
+            background: #1a1f2a;
+            border-radius: 36px;
+            padding: 20px 16px 24px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 215, 0, 0.15);
+            border: 1px solid #f5c54230;
+        }
+
+        .shop-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .shop-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f9d976, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 10px #f39c1240;
+        }
+
+        .badge-pubg {
+            background: #e67e22;
+            padding: 5px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #0b0e14;
+            border: 1px solid #f1c40f;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            overflow-x: auto;
+            padding: 4px 2px;
+            scrollbar-width: none;
+            flex-wrap: nowrap;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            background: #262d3b;
+            border: 1px solid #3d4658;
+            color: #a4b0c0;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .category-tab.active {
+            background: #f39c12;
+            color: #0b0e14;
+            border-color: #f1c40f;
+        }
+
+        .category-tab:active {
+            transform: scale(0.95);
+        }
+
+        .armor-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+            max-height: 430px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .armor-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .armor-grid::-webkit-scrollbar-thumb {
+            background: #f39c12;
+            border-radius: 10px;
+        }
+
+        .armor-item {
+            display: flex;
+            flex-direction: column;
+            background: #262d3b;
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 1px solid #3d4658;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .armor-item:active {
+            transform: scale(0.98);
+        }
+
+        .armor-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .armor-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .armor-icon {
+            font-size: 26px;
+            filter: drop-shadow(0 0 6px #f39c12);
+            width: 36px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .armor-details {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .armor-name {
+            font-weight: 600;
+            color: #eceff4;
+            font-size: 14px;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .armor-type {
+            font-size: 10px;
+            color: #8895aa;
+            background: #1f2a32;
+            padding: 1px 10px;
+            border-radius: 40px;
+            display: inline-block;
+            width: fit-content;
+            margin-top: 2px;
+            font-weight: 500;
+            border: 1px solid #3d4658;
+        }
+
+        .armor-price {
+            font-weight: 700;
+            color: #7bed9f;
+            font-size: 15px;
+            background: #1f2a32;
+            padding: 4px 12px;
+            border-radius: 40px;
+            border: 1px solid #2ecc7140;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .armor-price small {
+            font-weight: 400;
+            font-size: 10px;
+            color: #a4b0c0;
+            margin-left: 3px;
+        }
+
+        .add-btn {
+            background: #f39c12;
+            border: none;
+            color: #0b0e14;
+            font-weight: 800;
+            font-size: 18px;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 3px 0 #b86d0e;
+            border: 1px solid #f1c40f;
+            flex-shrink: 0;
+        }
+
+        .add-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #b86d0e;
+        }
+
+        .quality-options {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #3d4658;
+            flex-wrap: wrap;
+        }
+
+        .quality-option {
+            background: #1f2a32;
+            border: 2px solid #3d4658;
+            color: #a4b0c0;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quality-option.active {
+            border-color: #f39c12;
+            background: #2f3a4b;
+            color: #f39c12;
+        }
+
+        .quality-option.high {
+            border-color: #7bed9f;
+            color: #7bed9f;
+        }
+
+        .quality-option.high.active {
+            background: #7bed9f;
+            color: #0b0e14;
+            border-color: #7bed9f;
+        }
+
+        .quality-option.gold {
+            border-color: #f1c40f;
+            background: #2f2a1a;
+            color: #f1c40f;
+        }
+
+        .quality-option.gold.active {
+            background: #f1c40f;
+            color: #0b0e14;
+            border-color: #f1c40f;
+        }
+
+        .quality-option:active {
+            transform: scale(0.95);
+        }
+
+        .cart-section {
+            background: #141a24;
+            border-radius: 24px;
+            padding: 14px 14px;
+            margin: 14px 0 12px;
+            border: 1px solid #3d4658;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            color: #bdc3d0;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #2f3a4b;
+        }
+
+        .cart-items {
+            min-height: 44px;
+            padding: 4px 0;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .cart-items::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb {
+            background: #f39c12;
+            border-radius: 10px;
+        }
+
+        .cart-empty {
+            color: #5f6a7a;
+            text-align: center;
+            font-size: 12px;
+            padding: 8px 0;
+            font-weight: 400;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 4px;
+            border-bottom: 1px solid #262d3b;
+            color: #dfe4ea;
+            font-size: 13px;
+        }
+
+        .cart-item-name {
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .cart-item-price {
+            color: #7bed9f;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 10px;
+            margin-top: 4px;
+            border-top: 2px solid #f39c1240;
+            font-weight: 700;
+            font-size: 17px;
+            color: #f1f2f6;
+        }
+
+        .cart-total span:last-child {
+            color: #f1c40f;
+            font-size: 18px;
+        }
+
+        .order-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #f39c12, #e67e22);
+            border: none;
+            padding: 14px 12px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 18px;
+            color: #0b0e14;
+            letter-spacing: 0.8px;
+            box-shadow: 0 5px 0 #b86d0e, 0 8px 20px #f39c1240;
+            transition: 0.2s ease;
+            border: 1px solid #f1c40f;
+            cursor: pointer;
+        }
+
+        .order-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #b86d0e;
+        }
+
+        .order-btn.success {
+            background: #25D366;
+            box-shadow: 0 5px 0 #1a8c4a;
+            border-color: #25D366;
+        }
+
+        .order-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .whatsapp-hint {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #5f6a7a;
+            text-align: center;
+            background: #0f141e;
+            padding: 5px;
+            border-radius: 40px;
+            border: 1px solid #262d3b;
+        }
+
+        .whatsapp-hint strong {
+            color: #25D366;
+        }
+
+        .receipt-area {
+            margin-top: 14px;
+            background: #0f141e;
+            border-radius: 20px;
+            padding: 14px 12px;
+            border: 1px solid #3d4658;
+        }
+
+        .receipt-title {
+            color: #a4b0c0;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .receipt-content {
+            color: #d0d7e6;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Courier New', monospace;
+            background: #090c12;
+            padding: 10px 12px;
+            border-radius: 16px;
+            border: 1px solid #262d3b;
+            min-height: 60px;
+            max-height: 140px;
+            overflow-y: auto;
+        }
+
+        .receipt-content:empty::before {
+            content: "🛒 здесь будет ваш чек";
+            color: #3d4658;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 400;
+        }
+
+        .clear-btn {
+            background: transparent;
+            border: 1px solid #4a5568;
+            color: #8895aa;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .clear-btn:active {
+            background: #2f3a4b;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #25D366;
+            color: #0b0e14;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.error {
+            background: #e74c3c;
+            box-shadow: 0 8px 30px rgba(231, 76, 60, 0.4);
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="shop-card">
+        <div class="shop-header">
+            <h1>🏪 Hamza Shop</h1>
+            <span class="badge-pubg">PUBG MOBILE</span>
+        </div>
+
+        <div class="category-tabs" id="categoryTabs">
+            <button class="category-tab active" data-category="all">Все</button>
+            <button class="category-tab" data-category="weapon">Оружие</button>
+            <button class="category-tab" data-category="armor">Броня</button>
+            <button class="category-tab" data-category="gear">Снаряжение</button>
+            <button class="category-tab" data-category="service">⭐ Услуги</button>
+        </div>
+
+        <div class="armor-grid" id="armorList"></div>
+
+        <div class="cart-section">
+            <div class="cart-header">
+                <span>🛒 КОРЗИНА</span>
+                <button class="clear-btn" id="clearCartBtn">Очистить</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <div class="cart-empty">выберите товар</div>
+            </div>
+            <div class="cart-total">
+                <span>ИТОГО</span>
+                <span id="totalPrice">0</span>
+            </div>
+        </div>
+
+        <button class="order-btn" id="orderBtn">📲 ОТПРАВИТЬ В WHATSAPP</button>
+
+        <div class="whatsapp-hint">
+            📲 Заказ отправляется в <strong>WhatsApp</strong> на номер <strong>+7 963 989-38-88</strong>
+        </div>
+
+        <div class="receipt-area">
+            <div class="receipt-title">
+                <span>📋 ЧЕК</span>
+                <span style="font-size:10px; color:#5f6a7a;">(заказ фиксируется)</span>
+            </div>
+            <div class="receipt-content" id="receiptContent"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✅ Заказ отправлен в WhatsApp!</div>
+
+    <script>
+        (function(){
+            const WHATSAPP_PHONE = '79639893888';
+
+            // ========== ТОВАРЫ (ПНВ УБРАН) ==========
+            const products = [
+                // ===== ОРУЖИЕ (высшее 20, золотое 30) =====
+                {
+                    id: 'mk14',
+                    name: 'MK14 EBR',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Дробовик',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'mg3',
+                    name: 'MG3',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Пулемёт',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'm249',
+                    name: 'M249',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Пулемёт',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'awm',
+                    name: 'AWM',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Снайперская',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'groza',
+                    name: 'Groza',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Штурмовая',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'vector',
+                    name: 'Vector',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Пистолет-пулемёт',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'm762',
+                    name: 'M762',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Штурмовая',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'aug',
+                    name: 'AUG A3',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Штурмовая',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'dp28',
+                    name: 'DP-28',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Пулемёт',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'sks',
+                    name: 'SKS',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Дробовик',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'mini14',
+                    name: 'Mini-14',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Снайперская',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'scar',
+                    name: 'SCAR-L',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Штурмовая',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'ump45',
+                    name: 'UMP45',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Пистолет-пулемёт',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'akm',
+                    name: 'AKM',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Штурмовая',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'm416',
+                    name: 'M416',
+                    icon: '🔫',
+                    category: 'weapon',
+                    type: 'Штурмовая',
+                    qualities: [
+                        { id: 'high', label: 'Высшее', price: 20, class: 'high' },
+                        { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
+                    ]
+                },
+                // ===== БРОНЯ (обычное 10, золотое 15) =====
+                {
+                    id: 'helmet',
+                    name: 'Шлем 6-го уровня',
+                    icon: '⛑️',
+                    category: 'armor',
+                    type: 'Шлем',
+                    qualities: [
+                        { id: 'standart', label: 'Обычное', price: 10, class: '' },
+                        { id: 'gold', label: '⭐ Золотое', price: 15, class: 'gold' }
+                    ]
+                },
+                {
+                    id: 'vest',
+                    name: 'Бронежилет 6-го уровня',
+                    icon: '🛡️',
+                    category: 'armor',
+                    type: 'Броня',
+                    qualities: [
+                        { id: 'standart', label: 'Обычное', price: 10, class: '' },
+                        { id: 'gold', label: '⭐ Золотое', price: 15, class: 'gold' }
+                    ]
+                },
+                // ===== СНАРЯЖЕНИЕ (обычное 10, золотое 15) =====
+                {
+                    id: 'backpack',
+                    name: 'Рюкзак 6-го уровня',
+                    icon: '🎒',
+                    category: 'gear',
+                    type: 'Рюкзак',
+                    qualities: [
+                        { id: 'standart', label: 'Обычное', price: 10, class: '' },
+                        { id: 'gold', label: '⭐ Золотое', price: 15, class: 'gold' }
+                    ]
+                },
+                // ===== УСЛУГИ =====
+                {
+                    id: 'escort',
+                    name: 'Сопровождение',
+                    icon: '🛡️',
+                    category: 'service',
+                    type: 'Услуга',
+                    price: 150,
+                    single: true
+                }
+            ];
+
+            // Элементы DOM
+            const armorListEl = document.getElementById('armorList');
+            const cartItemsEl = document.getElementById('cartItems');
+            const totalPriceEl = document.getElementById('totalPrice');
+            const receiptContentEl = document.getElementById('receiptContent');
+            const orderBtn = document.getElementById('orderBtn');
+            const clearCartBtn = document.getElementById('clearCartBtn');
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const toast = document.getElementById('toast');
+
+            let cart = [];
+            let currentCategory = 'all';
+            let selectedQualities = {};
+            let isSending = false;
+
+            function renderProducts(category = 'all') {
+                const filtered = category === 'all' 
+                    ? products 
+                    : products.filter(p => p.category === category);
+
+                armorListEl.innerHTML = '';
+                
+                if (filtered.length === 0) {
+                    armorListEl.innerHTML = '<div style="color:#5f6a7a;text-align:center;padding:20px;">Нет товаров в этой категории</div>';
+                    return;
+                }
+
+                filtered.forEach(product => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'armor-item';
+
+                    const mainDiv = document.createElement('div');
+                    mainDiv.className = 'armor-main';
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'armor-info';
+
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'armor-icon';
+                    iconSpan.textContent = product.icon;
+
+                    const detailsDiv = document.createElement('div');
+                    detailsDiv.className = 'armor-details';
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'armor-name';
+                    nameSpan.textContent = product.name;
+
+                    const typeSpan = document.createElement('span');
+                    typeSpan.className = 'armor-type';
+                    typeSpan.textContent = product.type;
+
+                    detailsDiv.appendChild(nameSpan);
+                    detailsDiv.appendChild(typeSpan);
+                    infoDiv.appendChild(iconSpan);
+                    infoDiv.appendChild(detailsDiv);
+
+                    // Для услуг (без выбора качества)
+                    if (product.single) {
+                        const priceSpan = document.createElement('span');
+                        priceSpan.className = 'armor-price';
+                        priceSpan.innerHTML = `${product.price} <small>₽</small>`;
+
+                        const addBtn = document.createElement('button');
+                        addBtn.className = 'add-btn';
+                        addBtn.textContent = '+';
+                        addBtn.dataset.id = product.id;
+
+                        addBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            addToCart(product, null);
+                        });
+
+                        mainDiv.appendChild(infoDiv);
+                        mainDiv.appendChild(priceSpan);
+                        mainDiv.appendChild(addBtn);
+                        itemDiv.appendChild(mainDiv);
+                        armorListEl.appendChild(itemDiv);
+                        return;
+                    }
+
+                    // Для товаров с качеством
+                    const currentQualityId = selectedQualities[product.id] || product.qualities[0].id;
+                    const currentQuality = product.qualities.find(q => q.id === currentQualityId) || product.qualities[0];
+                    const currentPrice = currentQuality.price;
+
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = 'armor-price';
+                    priceSpan.id = `price-${product.id}`;
+                    priceSpan.innerHTML = `${currentPrice} <small>₽</small>`;
+
+                    const addBtn = document.createElement('button');
+                    addBtn.className = 'add-btn';
+                    addBtn.textContent = '+';
+                    addBtn.dataset.id = product.id;
+
+                    addBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        addToCart(product, currentQualityId);
+                    });
+
+                    mainDiv.appendChild(infoDiv);
+                    mainDiv.appendChild(priceSpan);
+                    mainDiv.appendChild(addBtn);
+
+                    const qualityDiv = document.createElement('div');
+                    qualityDiv.className = 'quality-options';
+
+                    product.qualities.forEach(quality => {
+                        const opt = document.createElement('button');
+                        opt.className = `quality-option ${quality.class}`;
+                        if (selectedQualities[product.id] === quality.id || 
+                            (!selectedQualities[product.id] && quality.id === product.qualities[0].id)) {
+                            opt.classList.add('active');
+                        }
+                        opt.textContent = quality.label;
+                        opt.dataset.productId = product.id;
+                        opt.dataset.qualityId = quality.id;
+
+                        opt.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            selectedQualities[product.id] = quality.id;
+                            
+                            const newPrice = quality.price;
+                            const priceEl = document.getElementById(`price-${product.id}`);
+                            if (priceEl) {
+                                priceEl.innerHTML = `${newPrice} <small>₽</small>`;
+                            }
+
+                            const parent = opt.parentElement;
+                            parent.querySelectorAll('.quality-option').forEach(b => b.classList.remove('active'));
+                            opt.classList.add('active');
+                        });
+
+                        qualityDiv.appendChild(opt);
+                    });
+
+                    itemDiv.appendChild(mainDiv);
+                    itemDiv.appendChild(qualityDiv);
+                    armorListEl.appendChild(itemDiv);
+                });
+            }
+
+            function addToCart(product, qualityId) {
+                let totalPrice;
+                let qualityLabel = '';
+
+                if (product.single) {
+                    totalPrice = product.price;
+                    qualityLabel = '';
+                } else {
+                    const quality = product.qualities.find(q => q.id === qualityId) || product.qualities[0];
+                    totalPrice = quality.price;
+                    qualityLabel = quality.label;
+                }
+                
+                cart.push({
+                    ...product,
+                    qualityId: qualityId,
+                    qualityLabel: qualityLabel,
+                    price: totalPrice,
+                    cartId: Date.now() + Math.random() * 1000
+                });
+                
+                updateCartUI();
+                updateReceipt();
+                showToast('✅ Товар добавлен в корзину!');
+            }
+
+            function removeFromCart(index) {
+                if (index >= 0 && index < cart.length) {
+                    cart.splice(index, 1);
+                    updateCartUI();
+                    updateReceipt();
+                }
+            }
+
+            function clearCart() {
+                cart = [];
+                updateCartUI();
+                updateReceipt();
+            }
+
+            function updateCartUI() {
+                cartItemsEl.innerHTML = '';
+                if (cart.length === 0) {
+                    cartItemsEl.innerHTML = '<div class="cart-empty">выберите товар</div>';
+                    totalPriceEl.textContent = '0';
+                    return;
+                }
+
+                const grouped = {};
+                cart.forEach((item, index) => {
+                    const key = item.single ? `${item.id}_single` : `${item.id}_${item.qualityId}`;
+                    if (!grouped[key]) {
+                        grouped[key] = { ...item, count: 0, indices: [] };
+                    }
+                    grouped[key].count += 1;
+                    grouped[key].indices.push(index);
+                });
+
+                const sortedKeys = Object.keys(grouped).sort();
+
+                sortedKeys.forEach(key => {
+                    const gItem = grouped[key];
+                    const row = document.createElement('div');
+                    row.className = 'cart-item';
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'cart-item-name';
+                    const qualityLabel = gItem.qualityLabel && gItem.qualityLabel !== 'Обычное' ? ` [${gItem.qualityLabel}]` : '';
+                    nameSpan.textContent = `${gItem.icon} ${gItem.name}${qualityLabel} ×${gItem.count}`;
+
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = 'cart-item-price';
+                    const totalItemPrice = gItem.price * gItem.count;
+                    priceSpan.textContent = `${totalItemPrice} ₽`;
+
+                    const delBtn = document.createElement('button');
+                    delBtn.textContent = '✕';
+                    delBtn.style.background = 'transparent';
+                    delBtn.style.border = 'none';
+                    delBtn.style.color = '#e74c3c';
+                    delBtn.style.fontWeight = '700';
+                    delBtn.style.fontSize = '16px';
+                    delBtn.style.cursor = 'pointer';
+                    delBtn.style.marginLeft = '8px';
+                    delBtn.style.padding = '0 6px';
+
+                    delBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const lastIndex = gItem.indices[gItem.indices.length - 1];
+                        removeFromCart(lastIndex);
+                        showToast('🗑️ Товар удалён из корзины');
+                    });
+
+                    const rightWrapper = document.createElement('div');
+                    rightWrapper.style.display = 'flex';
+                    rightWrapper.style.alignItems = 'center';
+                    rightWrapper.appendChild(priceSpan);
+                    rightWrapper.appendChild(delBtn);
+
+                    row.appendChild(nameSpan);
+                    row.appendChild(rightWrapper);
+                    cartItemsEl.appendChild(row);
+                });
+
+                const total = cart.reduce((sum, item) => sum + item.price, 0);
+                totalPriceEl.textContent = total;
+            }
+
+            function generateReceiptText() {
+                if (cart.length === 0) return '';
+
+                const grouped = {};
+                cart.forEach(item => {
+                    const key = item.single ? `${item.id}_single` : `${item.id}_${item.qualityId}`;
+                    if (!grouped[key]) {
+                        grouped[key] = { ...item, count: 0 };
+                    }
+                    grouped[key].count += 1;
+                });
+
+                const sortedKeys = Object.keys(grouped).sort();
+                const date = new Date();
+                const dateStr = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+
+                let receiptText = `══════════════════════════\n`;
+                receiptText += `  🏪 HAMZA SHOP · PUBG\n`;
+                receiptText += `  ${dateStr}\n`;
+                receiptText += `──────────────────────────\n`;
+
+                let totalSum = 0;
+                sortedKeys.forEach(key => {
+                    const g = grouped[key];
+                    const sum = g.price * g.count;
+                    totalSum += sum;
+                    const qualityLabel = g.qualityLabel && g.qualityLabel !== 'Обычное' ? ` [${g.qualityLabel}]` : '';
+                    receiptText += `  ${g.icon} ${g.name}${qualityLabel}\n`;
+                    receiptText += `    ${g.count} шт. × ${g.price} ₽ = ${sum} ₽\n`;
+                });
+
+                receiptText += `──────────────────────────\n`;
+                receiptText += `  ИТОГО: ${totalSum} ₽\n`;
+                receiptText += `══════════════════════════\n`;
+                receiptText += `  Спасибо за покупку! 🪖`;
+
+                return receiptText;
+            }
+
+            function updateReceipt() {
+                const text = generateReceiptText();
+                receiptContentEl.textContent = text;
+            }
+
+            function showToast(message, isError = false) {
+                toast.textContent = message;
+                toast.className = 'toast';
+                if (isError) {
+                    toast.classList.add('error');
+                }
+                toast.classList.add('show');
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            function sendOrderToWhatsApp() {
+                if (isSending) return;
+                
+                if (cart.length === 0) {
+                    showToast('❌ Корзина пуста! Добавьте товар.', true);
+                    return;
+                }
+
+                isSending = true;
+                orderBtn.disabled = true;
+                orderBtn.textContent = '⏳ ОТКРЫВАЕМ WHATSAPP...';
+
+                try {
+                    const receiptText = generateReceiptText();
+                    
+                    let message = '🛒 *НОВЫЙ ЗАКАЗ HAMZA SHOP*%0A%0A';
+                    message += receiptText.replace(/\n/g, '%0A');
+                    message += '%0A%0A📞 Клиент: (укажите ваш ник или ID)';
+                    
+                    const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${message}`;
+                    
+                    window.location.href = whatsappUrl;
+                    
+                    orderBtn.classList.add('success');
+                    orderBtn.textContent = '✅ WhatsApp ОТКРЫТ';
+                    showToast('✅ Открываем WhatsApp...');
+                    
+                    setTimeout(() => {
+                        orderBtn.classList.remove('success');
+                        orderBtn.textContent = '📲 ОТПРАВИТЬ В WHATSAPP';
+                        orderBtn.disabled = false;
+                        isSending = false;
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    showToast('❌ Ошибка! Попробуйте ещё раз.', true);
+                    orderBtn.textContent = '📲 ОТПРАВИТЬ В WHATSAPP';
+                    orderBtn.disabled = false;
+                    isSending = false;
+                }
+            }
+
+            orderBtn.addEventListener('click', sendOrderToWhatsApp);
+
+            clearCartBtn.addEventListener('click', () => {
+                if (cart.length > 0) {
+                    if (confirm('Очистить корзину?')) {
+                        clearCart();
+                        showToast('🗑️ Корзина очищена');
+                    }
+                } else {
+                    showToast('Корзина уже пуста');
+                }
+            });
+
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentCategory = tab.dataset.category;
+                    renderProducts(currentCategory);
+                });
+            });
+
+            // Инициализация
+            products.forEach(p => {
+                if (!p.single) {
+                    selectedQualities[p.id] = p.qualities[0].id;
+                }
+            });
+
+            renderProducts('all');
+            updateCartUI();
+            updateReceipt();
+        })();
+    </script>
+</body>
+</html>
