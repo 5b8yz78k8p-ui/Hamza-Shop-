@@ -183,6 +183,24 @@
             border: 1px solid #3d4658;
         }
 
+        .armor-stock {
+            font-size: 10px;
+            color: #7bed9f;
+            background: #1f2a32;
+            padding: 1px 10px;
+            border-radius: 40px;
+            display: inline-block;
+            width: fit-content;
+            margin-top: 2px;
+            font-weight: 500;
+            border: 1px solid #2ecc7140;
+        }
+
+        .armor-stock.out {
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
         .armor-price {
             font-weight: 700;
             color: #7bed9f;
@@ -201,6 +219,34 @@
             font-size: 10px;
             color: #a4b0c0;
             margin-left: 3px;
+        }
+
+        .add-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .qty-input {
+            width: 40px;
+            height: 34px;
+            background: #1f2a32;
+            border: 1px solid #3d4658;
+            border-radius: 8px;
+            color: #eceff4;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .qty-input:focus {
+            border-color: #f39c12;
+        }
+
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
         }
 
         .add-btn {
@@ -222,9 +268,15 @@
             flex-shrink: 0;
         }
 
-        .add-btn:active {
+        .add-btn:active:not(:disabled) {
             transform: translateY(3px);
             box-shadow: 0 1px 0 #b86d0e;
+        }
+
+        .add-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .quality-options {
@@ -377,7 +429,7 @@
             cursor: pointer;
         }
 
-        .order-btn:active {
+        .order-btn:active:not(:disabled) {
             transform: translateY(4px);
             box-shadow: 0 1px 0 #b86d0e;
         }
@@ -389,9 +441,22 @@
         }
 
         .order-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
             transform: none !important;
+            background: #3d4658;
+            box-shadow: none;
+            border-color: #3d4658;
+            color: #8895aa;
+        }
+
+        .order-btn .timer {
+            font-weight: 700;
+            color: #f1c40f;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 10px;
+            border-radius: 30px;
+            margin-left: 8px;
         }
 
         .whatsapp-hint {
@@ -549,16 +614,18 @@
     <script>
         (function(){
             const WHATSAPP_PHONE = '79639893888';
+            const COOLDOWN_SECONDS = 30;
 
-            // ========== ТОВАРЫ (ПНВ УБРАН) ==========
+            // ========== ТОВАРЫ С ЗАГЛУШКАМИ ==========
             const products = [
-                // ===== ОРУЖИЕ (высшее 20, золотое 30) =====
+                // ===== ОРУЖИЕ =====
                 {
                     id: 'mk14',
                     name: 'MK14 EBR',
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Дробовик',
+                    stock: 8,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -570,6 +637,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Пулемёт',
+                    stock: 5,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -581,6 +649,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Пулемёт',
+                    stock: 0,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -592,6 +661,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Снайперская',
+                    stock: 10,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -603,6 +673,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Штурмовая',
+                    stock: 7,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -614,6 +685,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Пистолет-пулемёт',
+                    stock: 12,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -625,6 +697,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Штурмовая',
+                    stock: 6,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -636,6 +709,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Штурмовая',
+                    stock: 4,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -647,6 +721,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Пулемёт',
+                    stock: 0,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -658,6 +733,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Дробовик',
+                    stock: 9,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -669,6 +745,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Снайперская',
+                    stock: 11,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -680,6 +757,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Штурмовая',
+                    stock: 8,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -691,6 +769,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Пистолет-пулемёт',
+                    stock: 15,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -702,6 +781,7 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Штурмовая',
+                    stock: 6,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
@@ -713,18 +793,20 @@
                     icon: '🔫',
                     category: 'weapon',
                     type: 'Штурмовая',
+                    stock: 3,
                     qualities: [
                         { id: 'high', label: 'Высшее', price: 20, class: 'high' },
                         { id: 'gold', label: '⭐ Золотое', price: 30, class: 'gold' }
                     ]
                 },
-                // ===== БРОНЯ (обычное 10, золотое 15) =====
+                // ===== БРОНЯ =====
                 {
                     id: 'helmet',
                     name: 'Шлем 6-го уровня',
                     icon: '⛑️',
                     category: 'armor',
                     type: 'Шлем',
+                    stock: 20,
                     qualities: [
                         { id: 'standart', label: 'Обычное', price: 10, class: '' },
                         { id: 'gold', label: '⭐ Золотое', price: 15, class: 'gold' }
@@ -736,18 +818,20 @@
                     icon: '🛡️',
                     category: 'armor',
                     type: 'Броня',
+                    stock: 15,
                     qualities: [
                         { id: 'standart', label: 'Обычное', price: 10, class: '' },
                         { id: 'gold', label: '⭐ Золотое', price: 15, class: 'gold' }
                     ]
                 },
-                // ===== СНАРЯЖЕНИЕ (обычное 10, золотое 15) =====
+                // ===== СНАРЯЖЕНИЕ =====
                 {
                     id: 'backpack',
                     name: 'Рюкзак 6-го уровня',
                     icon: '🎒',
                     category: 'gear',
                     type: 'Рюкзак',
+                    stock: 0,
                     qualities: [
                         { id: 'standart', label: 'Обычное', price: 10, class: '' },
                         { id: 'gold', label: '⭐ Золотое', price: 15, class: 'gold' }
@@ -760,6 +844,7 @@
                     icon: '🛡️',
                     category: 'service',
                     type: 'Услуга',
+                    stock: 999,
                     price: 150,
                     single: true
                 }
@@ -779,6 +864,34 @@
             let currentCategory = 'all';
             let selectedQualities = {};
             let isSending = false;
+            let cooldownTimer = null;
+            let cooldownRemaining = 0;
+
+            function startCooldown() {
+                cooldownRemaining = COOLDOWN_SECONDS;
+                orderBtn.disabled = true;
+                updateCooldownButton();
+
+                cooldownTimer = setInterval(() => {
+                    cooldownRemaining--;
+                    updateCooldownButton();
+
+                    if (cooldownRemaining <= 0) {
+                        clearInterval(cooldownTimer);
+                        cooldownTimer = null;
+                        orderBtn.disabled = false;
+                        orderBtn.innerHTML = '📲 ОТПРАВИТЬ В WHATSAPP';
+                        orderBtn.className = 'order-btn';
+                    }
+                }, 1000);
+            }
+
+            function updateCooldownButton() {
+                if (cooldownRemaining > 0) {
+                    orderBtn.innerHTML = `⏳ ПОДОЖДИТЕ <span class="timer">${cooldownRemaining}с</span>`;
+                    orderBtn.className = 'order-btn';
+                }
+            }
 
             function renderProducts(category = 'all') {
                 const filtered = category === 'all' 
@@ -817,8 +930,13 @@
                     typeSpan.className = 'armor-type';
                     typeSpan.textContent = product.type;
 
+                    const stockSpan = document.createElement('span');
+                    stockSpan.className = `armor-stock ${product.stock === 0 ? 'out' : ''}`;
+                    stockSpan.textContent = product.stock === 0 ? '❌ Нет в наличии' : `📦 В наличии: ${product.stock}`;
+
                     detailsDiv.appendChild(nameSpan);
                     detailsDiv.appendChild(typeSpan);
+                    detailsDiv.appendChild(stockSpan);
                     infoDiv.appendChild(iconSpan);
                     infoDiv.appendChild(detailsDiv);
 
@@ -828,19 +946,36 @@
                         priceSpan.className = 'armor-price';
                         priceSpan.innerHTML = `${product.price} <small>₽</small>`;
 
+                        const controlsDiv = document.createElement('div');
+                        controlsDiv.className = 'add-controls';
+
+                        const qtyInput = document.createElement('input');
+                        qtyInput.type = 'number';
+                        qtyInput.className = 'qty-input';
+                        qtyInput.value = 1;
+                        qtyInput.min = 1;
+                        qtyInput.max = product.stock;
+                        qtyInput.id = `qty-${product.id}`;
+                        qtyInput.disabled = product.stock === 0;
+
                         const addBtn = document.createElement('button');
                         addBtn.className = 'add-btn';
                         addBtn.textContent = '+';
                         addBtn.dataset.id = product.id;
+                        addBtn.disabled = product.stock === 0;
 
                         addBtn.addEventListener('click', (e) => {
                             e.stopPropagation();
-                            addToCart(product, null);
+                            const qty = parseInt(document.getElementById(`qty-${product.id}`).value) || 1;
+                            addToCart(product, null, qty);
                         });
+
+                        controlsDiv.appendChild(qtyInput);
+                        controlsDiv.appendChild(addBtn);
 
                         mainDiv.appendChild(infoDiv);
                         mainDiv.appendChild(priceSpan);
-                        mainDiv.appendChild(addBtn);
+                        mainDiv.appendChild(controlsDiv);
                         itemDiv.appendChild(mainDiv);
                         armorListEl.appendChild(itemDiv);
                         return;
@@ -856,19 +991,36 @@
                     priceSpan.id = `price-${product.id}`;
                     priceSpan.innerHTML = `${currentPrice} <small>₽</small>`;
 
+                    const controlsDiv = document.createElement('div');
+                    controlsDiv.className = 'add-controls';
+
+                    const qtyInput = document.createElement('input');
+                    qtyInput.type = 'number';
+                    qtyInput.className = 'qty-input';
+                    qtyInput.value = 1;
+                    qtyInput.min = 1;
+                    qtyInput.max = product.stock;
+                    qtyInput.id = `qty-${product.id}`;
+                    qtyInput.disabled = product.stock === 0;
+
                     const addBtn = document.createElement('button');
                     addBtn.className = 'add-btn';
                     addBtn.textContent = '+';
                     addBtn.dataset.id = product.id;
+                    addBtn.disabled = product.stock === 0;
 
                     addBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        addToCart(product, currentQualityId);
+                        const qty = parseInt(document.getElementById(`qty-${product.id}`).value) || 1;
+                        addToCart(product, currentQualityId, qty);
                     });
+
+                    controlsDiv.appendChild(qtyInput);
+                    controlsDiv.appendChild(addBtn);
 
                     mainDiv.appendChild(infoDiv);
                     mainDiv.appendChild(priceSpan);
-                    mainDiv.appendChild(addBtn);
+                    mainDiv.appendChild(controlsDiv);
 
                     const qualityDiv = document.createElement('div');
                     qualityDiv.className = 'quality-options';
@@ -908,7 +1060,17 @@
                 });
             }
 
-            function addToCart(product, qualityId) {
+            function addToCart(product, qualityId, qty) {
+                if (product.stock === 0) {
+                    showToast('❌ Товара нет в наличии!', true);
+                    return;
+                }
+
+                if (qty > product.stock) {
+                    showToast(`❌ В наличии только ${product.stock} шт.`, true);
+                    return;
+                }
+
                 let totalPrice;
                 let qualityLabel = '';
 
@@ -921,31 +1083,49 @@
                     qualityLabel = quality.label;
                 }
                 
-                cart.push({
-                    ...product,
-                    qualityId: qualityId,
-                    qualityLabel: qualityLabel,
-                    price: totalPrice,
-                    cartId: Date.now() + Math.random() * 1000
-                });
+                for (let i = 0; i < qty; i++) {
+                    cart.push({
+                        ...product,
+                        qualityId: qualityId,
+                        qualityLabel: qualityLabel,
+                        price: totalPrice,
+                        cartId: Date.now() + Math.random() * 1000 + i
+                    });
+                }
+                
+                product.stock -= qty;
                 
                 updateCartUI();
                 updateReceipt();
-                showToast('✅ Товар добавлен в корзину!');
+                renderProducts(currentCategory);
+                showToast(`✅ ${qty} шт. добавлено в корзину!`);
             }
 
             function removeFromCart(index) {
                 if (index >= 0 && index < cart.length) {
+                    const item = cart[index];
+                    const product = products.find(p => p.id === item.id);
+                    if (product) {
+                        product.stock += 1;
+                    }
                     cart.splice(index, 1);
                     updateCartUI();
                     updateReceipt();
+                    renderProducts(currentCategory);
                 }
             }
 
             function clearCart() {
+                cart.forEach(item => {
+                    const product = products.find(p => p.id === item.id);
+                    if (product) {
+                        product.stock += 1;
+                    }
+                });
                 cart = [];
                 updateCartUI();
                 updateReceipt();
+                renderProducts(currentCategory);
             }
 
             function updateCartUI() {
@@ -1075,6 +1255,7 @@
 
             function sendOrderToWhatsApp() {
                 if (isSending) return;
+                if (orderBtn.disabled) return;
                 
                 if (cart.length === 0) {
                     showToast('❌ Корзина пуста! Добавьте товар.', true);
@@ -1100,12 +1281,12 @@
                     orderBtn.textContent = '✅ WhatsApp ОТКРЫТ';
                     showToast('✅ Открываем WhatsApp...');
                     
+                    // Запускаем кулдаун после отправки
                     setTimeout(() => {
                         orderBtn.classList.remove('success');
-                        orderBtn.textContent = '📲 ОТПРАВИТЬ В WHATSAPP';
-                        orderBtn.disabled = false;
                         isSending = false;
-                    }, 3000);
+                        startCooldown();
+                    }, 2000);
                     
                 } catch (error) {
                     console.error('Ошибка:', error);
